@@ -1,0 +1,46 @@
+---
+- name: Ensure previous images are removed
+  community.vmware.vmware_guest:
+    name: "{{ item.json.request.image_name }}"
+    state: absent
+    validate_certs: false
+  loop: "{{ compose_status_request.results }}"
+  loop_control:
+    label: "{{ item.json.request.image_name }}"
+
+- name: Upload images to VMWare as new VM
+  community.vmware.vmware_deploy_ovf:
+    datacenter: Shadowman-DC
+    cluster: Cluster01
+    datastore: vsanDatastore
+    folder: "Shadowman-DC/vm/"
+    power_on: false
+    name: "{{ item.json.request.image_name }}"
+    ovf: "{{ image_path }}"
+    validate_certs: false
+  loop: "{{ compose_status_request.results }}"
+  loop_control:
+    label: "{{ item.json.request.image_name }}"
+  vars:
+    image_path: "{{ storage_dir | default('.') }}/{{ item.json.request.image_name }}{{ release_str | default('') }}.ova"
+
+- name: Add Network to VM
+  community.vmware.vmware_guest_network:
+    network_name: LAN02
+    name: "{{ item.json.request.image_name }}"
+    connected: true
+    validate_certs: false
+  loop: "{{ compose_status_request.results }}"
+  loop_control:
+    label: "{{ item.json.request.image_name }}"
+
+- name: Convert to Template
+  community.vmware.vmware_guest:
+    datacenter: Shadowman-DC
+    cluster: Cluster01
+    name: "{{ item.json.request.image_name }}"
+    is_template: true
+    validate_certs: false
+  loop: "{{ compose_status_request.results }}"
+  loop_control:
+    label: "{{ item.json.request.image_name }}"

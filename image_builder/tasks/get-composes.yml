@@ -1,0 +1,34 @@
+---
+- name: Get available composes
+  ansible.builtin.uri:
+    url: "{{ api_endpoint }}/composes"
+    method: GET
+    headers:
+      Authorization: Bearer {{ refresh_token.json.access_token }}
+      Content-Type: application/json
+    status_code: 200
+  register: composes
+
+- name: Identify required composes from the list
+  loop: "{{ images | product(composes.json.data) | list }}"
+  loop_control:
+    label: "{{ item[1].id }}"
+  vars:
+    thisitem:
+      json:
+        id: "{{ item[1].id }}"
+      invocation:
+        module_args:
+          body:
+            image_name: "{{ item[1].image_name }}"
+  when:
+    - item[1].image_name is defined
+    - item[1].image_name == item[0].name
+    - item[1].request.image_description | default(false) == item[0].compose.image_description | default(false)
+  ansible.builtin.set_fact:
+    composeids: "{{ composeids|default([]) + [ thisitem ] }}"
+
+- name: Set fact with compose_request
+  ansible.builtin.set_fact:
+    compose_request:
+      results: "{{ composeids | default([]) }}"

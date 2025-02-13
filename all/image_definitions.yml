@@ -1,0 +1,45 @@
+---
+packages:
+  - ipa-client
+  - yum-utils
+  - firewalld
+
+# The actual images definition
+images:
+  - name: rhel-9-shadowman
+    compose:
+      distribution: rhel-9
+      image_description: Shadowman RHEL 9
+      image_type: vsphere-ova
+      customizations:
+        packages: "{{ packages }}"
+        users:
+          - name: "{{ username | default(omit) }}"
+            password: "{{ userpassword | default(omit) }}"
+            ssh_key: "{{ ssh_key | default(omit) }}"
+        firewall:
+          services:
+            enabled:
+              - ssh
+        services:
+          enabled:
+            - firewalld
+
+  - name: rhel-8-shadowman
+    compose:
+      distribution: rhel-8
+      image_description: Shadowman RHEL 8
+      image_type: vsphere-ova
+      customizations:
+        packages: "{{ packages }}"
+        users:
+          - name: "{{ username | default(omit) }}"
+            password: "{{ userpassword | default(omit) }}"
+            ssh_key: "{{ ssh_key | default(omit) }}"
+        firewall:
+          services:
+            enabled:
+              - ssh
+        services:
+          enabled:
+            - firewalld

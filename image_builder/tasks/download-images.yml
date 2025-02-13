@@ -1,0 +1,38 @@
+---
+- name: Set fact with release_str if release_id is set
+  ansible.builtin.set_fact:
+    release_str: "-{{ release_id }}"
+  when: release_id is defined
+
+- name: Start image download
+  ansible.builtin.get_url:
+    url: "{{ image_url }}"
+    dest: "{{ image_path }}"
+    mode: "0644"
+  loop: "{{ compose_status_request.results }}"
+  loop_control:
+    label: "{{ image_path | default('N/A') }}"
+  when:
+    - item.json is defined
+    - item.json.image_status.status == "success"
+    - item.json.image_status.upload_status.status == "success"
+  vars:
+    image_url: "{{ item.json.image_status.upload_status.options.url }}"
+    image_path: "{{ storage_dir | default('.') }}/{{ item.json.request.image_name }}{{ release_str | default('') }}.ova"
+  async: 600
+  poll: 0
+  register: download
+
+- name: Confirm image download completed
+  ansible.builtin.async_status:
+    jid: "{{ jobid }}"
+  register: job_result
+  when: jobid
+  until: job_result.finished
+  retries: 10
+  delay: 60
+  loop: "{{ download.results }}"
+  loop_control:
+    label: "{{ item.item.json.request.image_name | default('N/A') }}"
+  vars:
+    jobid: "{{ item.ansible_job_id | default(false) }}"

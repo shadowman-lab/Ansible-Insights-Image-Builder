@@ -1,0 +1,27 @@
+---
+- name: Request creation of images
+  ansible.builtin.uri:
+    url: "{{ api_endpoint }}/compose"
+    method: POST
+    headers:
+      Authorization: Bearer {{ refresh_token.json.access_token }}
+    body:
+      image_name: "{{ image.name }}"
+      image_description: "{{ image.compose.image_description | default(omit) }}"
+      distribution: "{{ image.compose.distribution }}"
+      customizations: "{{ image.compose.customizations | default(omit) }}"
+      image_requests:
+        - architecture: "{{ image.compose.architecture | default('x86_64') }}"
+          image_type: "{{ image.compose.image_type | default('guest-image') }}"
+          upload_request:
+            type: "{{ image.upload_type | default('aws.s3') }}"
+            options: "{{ image.upload_options | default('{}') }}"
+    body_format: json
+    status_code: 201
+  register: compose_request
+  loop: "{{ filecheck.results }}"
+  loop_control:
+    label: "{{ image.name }}"
+  vars:
+    image: "{{ item.item }}"
+  when: not item.stat.exists
