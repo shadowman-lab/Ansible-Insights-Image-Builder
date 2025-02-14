@@ -9,7 +9,7 @@ images:
   - name: rhel-9-shadowman
     compose:
       distribution: rhel-9
-      image_description: Shadowman RHEL 9
+      image_description: rhel9_64Guest
       image_type: vsphere-ova
       customizations:
         packages: "{{ packages }}"
@@ -28,7 +28,7 @@ images:
   - name: rhel-8-shadowman
     compose:
       distribution: rhel-8
-      image_description: Shadowman RHEL 8
+      image_description: rhel8_64Guest
       image_type: vsphere-ova
       customizations:
         packages: "{{ packages }}"
