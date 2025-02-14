@@ -11,7 +11,6 @@ images:
       distribution: rhel-9
       image_description: rhel9_64Guest
       image_type: vsphere-ova
-      size: 53687091200
       customizations:
         packages: "{{ packages }}"
         users:
@@ -31,7 +30,6 @@ images:
       distribution: rhel-8
       image_description: rhel8_64Guest
       image_type: vsphere-ova
-      size: 53687091200
       customizations:
         packages: "{{ packages }}"
         users:
