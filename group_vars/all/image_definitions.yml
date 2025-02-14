@@ -4,6 +4,23 @@ packages:
   - yum-utils
   - firewalld
 
+filesystems:
+  - mountpoint: /dev
+    min_size: 1856128
+  - mountpoint: /dev/shm
+    min_size: 1876572
+  - mountpoint: /run
+    min_size: 1876572
+  - mountpoint: /sys/fs/cgroup
+    min_size: 1876572
+  - mountpoint: /
+    min_size: 46589720
+  - mountpoint: /boot
+    min_size: 1038336
+  - mountpoint: /boot/efi
+    min_size: 613184
+
+
 # The actual images definition
 images:
   - name: rhel-9-shadowman
@@ -13,6 +30,7 @@ images:
       image_type: vsphere-ova
       customizations:
         packages: "{{ packages }}"
+        filesystem: "{{ filesystems }}"
         users:
           - name: "{{ username | default(omit) }}"
             password: "{{ userpassword | default(omit) }}"
@@ -32,6 +50,7 @@ images:
       image_type: vsphere-ova
       customizations:
         packages: "{{ packages }}"
+        filesystem: "{{ filesystems }}"
         users:
           - name: "{{ username | default(omit) }}"
             password: "{{ userpassword | default(omit) }}"

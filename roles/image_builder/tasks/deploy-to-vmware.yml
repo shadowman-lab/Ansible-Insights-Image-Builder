@@ -24,13 +24,11 @@
   vars:
     image_path: "{{ storage_dir | default('.') }}/{{ item.json.request.image_name }}{{ release_str | default('') }}.ova"
 
-- name: Upgrade Hardware Version, Assign Guest ID, resize disk
+- name: Upgrade Hardware Version, Assign Guest ID
   community.vmware.vmware_guest:
     validate_certs: false
     name: "{{ item.json.request.image_name }}"
     guest_id: "{{ item.json.request.image_description }}"
-    disk:
-      - size_gb: 50
     hardware:
       version: 20
   loop: "{{ compose_status_request.results }}"
