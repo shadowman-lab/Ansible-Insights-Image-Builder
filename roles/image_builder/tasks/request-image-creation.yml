@@ -10,13 +10,7 @@
       image_description: "{{ image.compose.image_description | default(omit) }}"
       distribution: "{{ image.compose.distribution }}"
       customizations: "{{ image.compose.customizations | default(omit) }}"
-      image_requests:
-        - architecture: "{{ image.compose.architecture | default('x86_64') }}"
-          image_type: "{{ image.compose.image_type | default('guest-image') }}"
-          size: 53687091200
-          upload_request:
-            type: "{{ image.upload_type | default('aws.s3') }}"
-            options: "{{ image.upload_options | default('{}') }}"
+      image_requests: "{{ image.compose.image_requests }}"
     body_format: json
     status_code: 201
   register: compose_request

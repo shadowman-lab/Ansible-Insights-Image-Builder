@@ -10,7 +10,6 @@ images:
     compose:
       distribution: rhel-9
       image_description: rhel9_64Guest
-      image_type: vsphere-ova
       customizations:
         packages: "{{ packages }}"
         users:
@@ -24,12 +23,18 @@ images:
         services:
           enabled:
             - firewalld
+      image_requests:
+        architecture: x86_64
+        image_type: vsphere-ova
+        size: 53687091200
+        upload_request:
+          type: aws.s3
+          options: '{}'
 
   - name: rhel-8-shadowman
     compose:
       distribution: rhel-8
       image_description: rhel8_64Guest
-      image_type: vsphere-ova
       customizations:
         packages: "{{ packages }}"
         users:
@@ -43,3 +48,10 @@ images:
         services:
           enabled:
             - firewalld
+      image_requests:
+        architecture: x86_64
+        image_type: vsphere-ova
+        size: 53687091200
+        upload_request:
+          type: aws.s3
+          options: '{}'
