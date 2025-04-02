@@ -24,12 +24,12 @@ images:
           enabled:
             - firewalld
       image_requests:
-        architecture: x86_64
-        image_type: vsphere-ova
-        size: 53687091200
-        upload_request:
-          type: aws.s3
-          options: '{}'
+        - architecture: x86_64
+          image_type: vsphere-ova
+          size: 53687091200
+          upload_request:
+            type: aws.s3
+            options: '{}'
 
   - name: rhel-8-shadowman
     compose:
@@ -49,9 +49,9 @@ images:
           enabled:
             - firewalld
       image_requests:
-        architecture: x86_64
-        image_type: vsphere-ova
-        size: 53687091200
-        upload_request:
-          type: aws.s3
-          options: '{}'
+        - architecture: x86_64
+          image_type: vsphere-ova
+          size: 53687091200
+          upload_request:
+            type: aws.s3
+            options: '{}'
