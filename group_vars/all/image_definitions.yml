@@ -54,4 +54,4 @@ images:
           size: 53687091200
           upload_request:
             type: aws.s3
-            options: '{}'
+            options: {}
