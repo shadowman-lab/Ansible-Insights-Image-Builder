@@ -28,7 +28,7 @@
     jid: "{{ jobid }}"
   register: job_result
   when: jobid
-  until: job_result.finished | bool
+  until: job_result is finished
   retries: 10
   delay: 60
   loop: "{{ download.results }}"

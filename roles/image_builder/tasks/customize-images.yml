@@ -19,7 +19,7 @@
   ansible.builtin.async_status:
     jid: "{{ item.ansible_job_id }}"
   register: job_result
-  until: job_result.finished | bool
+  until: job_result is finished
   retries: 30
   delay: 60
   loop: "{{ customize.results }}"
